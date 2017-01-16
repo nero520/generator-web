@@ -73,71 +73,75 @@ public class GeneratorServlet extends HttpServlet {
      * @throws ServletException if an error occurred
      * @throws IOException if an error occurred
      */
-    public void doGet(HttpServletRequest request, HttpServletResponse response, GeneratorParam param)
-            throws Exception {
-
-    	/* response.setContentType("image/png");
-        response.setHeader("cache", "no-cache");
-       	rwf.setMaxLength(4);
-        rwf.setMinLength(4);
-        HttpSession session = request.getSession(true);
-        OutputStream os = response.getOutputStream();
-        ccs.setFilterFactory(crff);
-        String captcha = EncoderHelper.getChallangeAndWriteImage(ccs, "png", os);
-        session.setAttribute(Const.SESSION_CAPTCHA_KEY, captcha);
-        os.flush();
-        os.close();*/
-    	
-    	// 信息缓存
-		List<String> warnings = new ArrayList<String>();
-		// 覆盖已有的重名文件
-		boolean overwrite = true;
-		// 准备 配置文件
-		final String path = request.getSession().getServletContext().getRealPath(File.separator);
-		final String srcPath  = "/src" + new Date().getTime();
-		param.setBuildPath(path + srcPath);
-		String config_path = "WEB-INF/classes/runtimecfg/generatorConfig.xml";
-		File configFile = new File(path + config_path);
-		// 1.创建 配置解析器
-		ConfigurationParser parser = new ConfigurationParser(warnings);
-		// 2.获取 配置信息
-		Configuration config = parser.parseConfiguration(configFile);
-		fixConfig(config, param);/** 封装参数*/
-		// 3.创建 默认命令解释调回器
-		DefaultShellCallback callback = new DefaultShellCallback(overwrite);
-		// 4.创建 mybatis的生成器
-		MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-		// 5.执行，关闭生成器
-		String result = "000000";
-		try {
-			myBatisGenerator.generate(null);
-		} catch (CommunicationsException e) {
-			result = "000001";
-		} catch (ConnectException e) {
-			result = "000002";
-		} catch (MySQLSyntaxErrorException e) {
-			result = "000003";
-		} catch (SQLException e) {
-			result = "000004";
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	try {
+    		GeneratorParam param = new GeneratorParam();
+    		param.setConnection(request.getParameter("connection"));
+    		param.setPort(request.getParameter("port"));
+    		param.setDataBase(request.getParameter("dataBase"));
+    		param.setUserId(request.getParameter("userId"));
+    		param.setUserPass(request.getParameter("userPass"));
+    		param.setModelPath(request.getParameter("modelPath"));
+    		param.setDaoPath(request.getParameter("daoPath"));
+    		param.setMappingPath(request.getParameter("mappingPath"));
+    		param.setTableNames(request.getParameterValues("tableNames"));
+    		param.setModelNames(request.getParameterValues("modelNames"));
+    		// 信息缓存
+    		List<String> warnings = new ArrayList<String>();
+    		// 覆盖已有的重名文件
+    		boolean overwrite = true;
+    		// 准备 配置文件
+    		final String path = request.getSession().getServletContext().getRealPath(File.separator);
+    		final String srcPath  = "/src" + new Date().getTime();
+    		
+    		param.setBuildPath(path + srcPath);
+    		String config_path = "WEB-INF/classes/runtimecfg/generatorConfig.xml";
+    		File configFile = new File(path + config_path);
+    		// 1.创建 配置解析器
+    		ConfigurationParser parser = new ConfigurationParser(warnings);
+    		// 2.获取 配置信息
+    		Configuration config = parser.parseConfiguration(configFile);
+    		fixConfig(config, param);/** 封装参数*/
+    		// 3.创建 默认命令解释调回器
+    		DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+    		// 4.创建 mybatis的生成器
+    		MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+    		// 5.执行，关闭生成器
+    		String result = "000000";
+    		try {
+    			myBatisGenerator.generate(null);
+    		} catch (CommunicationsException e) {
+    			result = "000001";
+    		} catch (ConnectException e) {
+    			result = "000002";
+    		} catch (MySQLSyntaxErrorException e) {
+    			result = "000003";
+    		} catch (SQLException e) {
+    			result = "000004";
+    		} catch (Exception e) {
+    			result = "000005";
+    		}
+    		this.fileToZip(param.getBuildPath(), path + "/tmp", srcPath);/** 打包操作*/
+    		this.responseJson(response, result, srcPath + ".zip");
+    		new Thread(new Runnable() { /** 执行完毕后删除冗余文件*/
+    		    @Override
+    		    public void run() {
+    		    	try {
+    					Thread.sleep(60000);
+    					File dirFile = new File(path + srcPath);
+    					File zipFile = new File(path + "/tmp" + "/" + srcPath +".zip");
+    					deleteDir(dirFile);
+    					deleteDir(zipFile);
+    				} catch (InterruptedException e) {
+    					e.printStackTrace();
+    				}
+    		    }
+    		}).start();
 		} catch (Exception e) {
-			result = "000005";
+			e.printStackTrace();
 		}
-		this.fileToZip(param.getBuildPath(), path + "/tmp", srcPath);/** 打包操作*/
-		this.responseJson(response, result, srcPath + ".zip");
-		new Thread(new Runnable() { /** 执行完毕后删除冗余文件*/
-		    @Override
-		    public void run() {
-		    	try {
-					Thread.sleep(60000);
-					File dirFile = new File(path + srcPath);
-					File zipFile = new File(path + "/tmp" + "/" + srcPath +".zip");
-					deleteDir(dirFile);
-					deleteDir(zipFile);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-		    }
-		}).start();
+    	
     }
 
     /**
@@ -162,28 +166,6 @@ public class GeneratorServlet extends HttpServlet {
         super.destroy(); // Just puts "destroy" string in log
     }
     
-    /**
-     * 递归删除目录下的所有文件及子目录下所有文件
-     * @param dir 将要删除的文件目录
-     * @return boolean Returns "true" if all deletions were successful.
-     *                 If a deletion fails, the method stops attempting to
-     *                 delete and returns "false".
-     */
-    private static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            //递归删除目录中的子目录下
-            for (int i=0; i<children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        // 目录此时为空，可以删除
-        return dir.delete();
-    }
-    
     protected void responseJson(HttpServletResponse response,String responseCode,String zipName) throws IOException{
 		response.setContentType("application/json;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -191,6 +173,7 @@ public class GeneratorServlet extends HttpServlet {
 		out.write("{\"rspCode\":\"" + responseCode + "\",\"zipName\":\"" + zipName + "\"}");
 		out.flush();
 	}
+    
     public void fixConfig(Configuration config, GeneratorParam param){
 		File dirFile = new File(param.getBuildPath());
 		if(!dirFile.exists()){
@@ -260,6 +243,28 @@ public class GeneratorServlet extends HttpServlet {
             throw new RuntimeException(e);    
         }    
         return flag;
+    }
+    
+    /**
+     * 递归删除目录下的所有文件及子目录下所有文件
+     * @param dir 将要删除的文件目录
+     * @return boolean Returns "true" if all deletions were successful.
+     *                 If a deletion fails, the method stops attempting to
+     *                 delete and returns "false".
+     */
+    private static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            //递归删除目录中的子目录下
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
     }
     
     /** 
