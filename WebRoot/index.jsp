@@ -100,8 +100,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	          <a id="submitBtn" href="javascript:void(0);" onclick="doSum();" style="width: 200px;" class="btn btn-lg btn-primary "><span class="fui-check-circle"></span>&nbsp;生成并下载</a>
 	        </div>
 		</div>
-
-
+	
 	</div>
 	<!-- /container -->
 	<footer> </footer>
