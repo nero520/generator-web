@@ -166,6 +166,14 @@ public class GeneratorServlet extends HttpServlet {
         super.destroy(); // Just puts "destroy" string in log
     }
     
+    
+    /**
+     * @date 2017年1月17日
+     * @param response
+     * @param responseCode
+     * @param zipName
+     * @throws IOException
+     */
     protected void responseJson(HttpServletResponse response,String responseCode,String zipName) throws IOException{
 		response.setContentType("application/json;charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -174,6 +182,12 @@ public class GeneratorServlet extends HttpServlet {
 		out.flush();
 	}
     
+    
+    /**
+     * @date 2017年1月17日
+     * @param config
+     * @param param
+     */
     public void fixConfig(Configuration config, GeneratorParam param){
 		File dirFile = new File(param.getBuildPath());
 		if(!dirFile.exists()){
@@ -215,10 +229,14 @@ public class GeneratorServlet extends HttpServlet {
 		}
 	}
     
-    /** 
-     * 执行压缩操作 
-     * @param srcPathName 被压缩的文件/文件夹 
-     */  
+    
+    /**
+     * @date 2017年1月17日
+     * @param sourceFilePath
+     * @param zipFilePath
+     * @param fileName
+     * @return
+     */
     public boolean fileToZip(String sourceFilePath, String zipFilePath, String fileName) {    
     	boolean flag = false;
         File file = new File(sourceFilePath);    
@@ -266,6 +284,7 @@ public class GeneratorServlet extends HttpServlet {
         // 目录此时为空，可以删除
         return dir.delete();
     }
+    
     
     /** 
      * 判断是目录还是文件，根据类型（文件/文件夹）执行不同的压缩方法 
