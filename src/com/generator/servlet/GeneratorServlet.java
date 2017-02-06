@@ -96,7 +96,7 @@ public class GeneratorServlet extends HttpServlet {
     		final String srcPath  = "/src" + new Date().getTime();
     		
     		param.setBuildPath(path + srcPath);
-    		String config_path = "WEB-INF/classes/runtimecfg/generatorConfig.xml";
+    		String config_path = "/WEB-INF/classes/runtimecfg/generatorConfig.xml";
     		File configFile = new File(path + config_path);
     		// 1.创建 配置解析器
     		ConfigurationParser parser = new ConfigurationParser(warnings);
@@ -196,7 +196,7 @@ public class GeneratorServlet extends HttpServlet {
 		Context context = config.getContexts().get(0);
 		//配置数据库属性
 		JDBCConnectionConfiguration jdbcConnectionConfiguration = context.getJdbcConnectionConfiguration();
-		String connection = "jdbc:mysql://" + param.getConnection() + "/" + param.getDataBase();
+		String connection = "jdbc:mysql://" + param.getConnection() + ":" + param.getPort() + "/" + param.getDataBase();
 		jdbcConnectionConfiguration.setConnectionURL(connection);
 		jdbcConnectionConfiguration.setUserId(param.getUserId());
 		jdbcConnectionConfiguration.setPassword(param.getUserPass());
