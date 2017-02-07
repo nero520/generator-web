@@ -24,8 +24,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 </head>
 
-<body>
-	<div class="container">
+<body style="background-color: #1abc9c;">
+	<div class="container login-form">
 		<h3 style="text-align: center;">GENERATOR</h3>
 		<form class="form-horizontal" role="form" id="form">
 
