@@ -6,7 +6,7 @@
 	<groupId>com.icardpay.business</groupId>
 	<artifactId>generator-web</artifactId>
 	<version>1.0</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>generator-web</name>
 	<description>Demo project for Generator</description>
@@ -17,6 +17,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -48,6 +49,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpmanifest>true</wtpmanifest>
+					<wtpapplicationxml>true</wtpapplicationxml>
+					<wtpversion>2.0</wtpversion>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
