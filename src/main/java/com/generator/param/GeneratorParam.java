@@ -24,6 +24,8 @@ public class GeneratorParam {
     private String[] tableNames;
     
     private String[] modelNames;
+    
+    private String isHump;
 
 	public String getConnection() {
 		return connection;
@@ -111,6 +113,14 @@ public class GeneratorParam {
 
 	public void setBuildPath(String buildPath) {
 		this.buildPath = buildPath;
+	}
+
+	public String getIsHump() {
+		return isHump;
+	}
+
+	public void setIsHump(String isHump) {
+		this.isHump = isHump;
 	}
     
 }
