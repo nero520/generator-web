@@ -87,6 +87,7 @@ public class GeneratorServlet extends HttpServlet {
     		param.setMappingPath(request.getParameter("mappingPath"));
     		param.setTableNames(request.getParameterValues("tableNames"));
     		param.setModelNames(request.getParameterValues("modelNames"));
+    		param.setIsHump(request.getParameter("isHump"));
     		// 信息缓存
     		List<String> warnings = new ArrayList<String>();
     		// 覆盖已有的重名文件
@@ -210,6 +211,9 @@ public class GeneratorServlet extends HttpServlet {
 				tableConfiguration.setDeleteByExampleStatementEnabled(false);
 				tableConfiguration.setSelectByExampleStatementEnabled(false);
 				tableConfiguration.setUpdateByExampleStatementEnabled(false);
+				//模型是否驼峰命名，为0则为驼峰
+				if(param.getIsHump().equals("0"))
+					tableConfiguration.getProperties().setProperty("useActualColumnNames", "true");
 				tableConfigurations.add(tableConfiguration);
 			}
 		}

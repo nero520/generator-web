@@ -78,6 +78,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<input type="text" class="form-control" placeholder="mybatis.mapper" id="mappingPath" name="mappingPath" required/>
 				</div>
 			</div>
+			<div class="form-group">
+				<label for="mappingPath" class="col-lg-2 control-label">模型是否驼峰命名</label>
+				<div class="col-lg-10">
+					<select id="isHump" name="isHump" class="form-control">
+						<option value="0" >是</option>
+						<option value="1" >否</option>
+					</select>
+				</div>
+			</div>
 			
 			<div class="form-group">
 				<label for="tableNames" class="col-lg-2 control-label">表名</label>
