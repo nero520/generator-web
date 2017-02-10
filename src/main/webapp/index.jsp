@@ -155,7 +155,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	     		+"<label class='col-lg-2 control-label'>模型名</label>"
 	     		+"<div class='col-xs-3'><input type='text' name='modelNames' class='form-control' /></div>"
 	     		+"<a class='btn btn-success btn-xs' onclick='addItem()' title='增加'><span class='fui-check'>&nbsp;增加</span></a>&nbsp;"
-	     		+"<a class='btn btn-danger btn-xs' onclick='redItem(this)' title='删除'><span class='fui-cross'>&nbsp;增加</span></a>"
+	     		+"<a class='btn btn-danger btn-xs' onclick='redItem(this)' title='删除'><span class='fui-cross'>&nbsp;删除</span></a>"
 	     		+"</div>";
 			$("#form").append(item);
 		}
