@@ -25,8 +25,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <body style="background-color: #1abc9c;">
+	<style>
+      body {
+        min-height: 800px;
+        padding-top: 65px;
+      }
+    </style>
+
+	<!-- Static navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <a class="navbar-brand" href="#">Generator-Web</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
 	<div class="container login-form">
-		<h3 style="text-align: center;">GENERATOR</h3>
 		<form class="form-horizontal" role="form" id="form">
 
 			<div class="form-group">
