@@ -126,7 +126,7 @@ public class GeneratorServlet extends HttpServlet {
     		this.fileToZip(param.getBuildPath(), path + "/tmp", srcPath);/** 打包操作*/
     		this.responseJson(response, result, srcPath + ".zip");
     		new Thread(new Runnable() { /** 执行完毕后删除冗余文件*/
-    		    @Override
+
     		    public void run() {
     		    	try {
     					Thread.sleep(60000);
